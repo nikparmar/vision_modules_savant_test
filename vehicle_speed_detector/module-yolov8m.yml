@@ -63,7 +63,7 @@ pipeline:
         display-tracking-id: 0
 
     - element: pyfunc
-      module: vision_modules.vehicle_speed_detector.src.post_processor
+      module: vision_modules_savant_test.vehicle_speed_detector.post_processor
       class_name: LineCrossing
       kwargs:
         config_path: ${oc.env:PROJECT_PATH}/vision_modules_savant_test/vehicle_speed_detector/entry_exit_line_cords.yml
