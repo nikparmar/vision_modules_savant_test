@@ -19,7 +19,7 @@ services:
   module:
     build:
       context: .
-      dockerfile: Dockerfile.x86
+      dockerfile: docker/Dockerfile.x86
     volumes:
       - zmq_sockets:/tmp/zmq-sockets
       - ../../models/vehicle_speed_detector:/models
