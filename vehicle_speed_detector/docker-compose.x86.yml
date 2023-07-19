@@ -25,7 +25,7 @@ services:
       - ../../models/vehicle_speed_detector:/models
       - ../../downloads/vehicle_speed_detector:/downloads
       - ..:/opt/savant/vision_modules_savant_test/vehicle_speed_detector
-    command: vision_modules_savant_test/vehicle_speed_detector/docker/module-yolov8m.yml
+    command: vision_modules_savant_test/vehicle_speed_detector/module-yolov8m.yml
     environment:
       - ZMQ_SRC_ENDPOINT=sub+bind:ipc:///tmp/zmq-sockets/input-video.ipc
       - ZMQ_SINK_ENDPOINT=pub+bind:ipc:///tmp/zmq-sockets/output-video.ipc
