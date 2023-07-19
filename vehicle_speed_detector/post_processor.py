@@ -7,7 +7,7 @@ from savant_rs.primitives.geometry import PolygonalArea, Point
 from savant.gstreamer import Gst
 from savant.deepstream.meta.frame import NvDsFrameMeta
 from savant.deepstream.pyfunc import NvDsPyFuncPlugin
-from vision_modules_savant_test.vehicle_speed_detector.src.utils import (
+from vision_modules_savant_test.vehicle_speed_detector.utils import (
     Point, Direction, TwoLinesCrossingTracker,
     IdleObjectTracker, CrowdTracker, SpeedEstimator, Movement,
     is_inside_postgis_parallel

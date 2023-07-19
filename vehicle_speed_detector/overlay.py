@@ -4,7 +4,7 @@ import cv2
 from savant.deepstream.drawfunc import NvDsDrawFunc
 from savant.deepstream.meta.frame import NvDsFrameMeta, BBox
 from savant.utils.artist import Position, Artist
-from vision_modules.vehicle_speed_detector.src.utils import Direction, Movement, RandColorIterator
+from vision_modules_savant_test.vehicle_speed_detector.utils import Direction, Movement, RandColorIterator
 
 
 class Overlay(NvDsDrawFunc):
