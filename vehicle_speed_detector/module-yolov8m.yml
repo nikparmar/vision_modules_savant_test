@@ -1,0 +1,74 @@
+name: ${oc.env:MODULE_NAME, 'traffic-meter-yolov8m'}
+
+parameters:
+  frame:
+    width: 640
+    height: 480
+    padding:
+      # Paddings are kept on the output frame
+      keep: true
+      left: 0
+      right: 0
+      # Padding size is 180px on the top of the frame
+      top: 180
+      bottom: 0
+  output_frame:
+    codec: jpeg
+  draw_func:
+    module: vision_modules_savant_test.vehicle_speed_detector.overlay
+    # specify the drawfunc's python class from the module
+    class_name: Overlay
+    kwargs:
+      overlay_height: 180
+
+pipeline:
+
+  elements:
+    - element: pyfunc
+      module: vision_modules_savant_test.vehicle_speed_detector.post_processor
+      class_name: ConditionalDetectorSkip
+      kwargs:
+        config_path: ${oc.env:PROJECT_PATH}/vision_modules_savant_test/vehicle_speed_detector/entry_exit_line_cords.yml
+
+    # detector
+    - element: nvinfer@detector
+      name: yolov8m
+      model:
+        remote:
+          url: s3://savant-data/models/yolov8m/yolov8m.zip
+          checksum_url: s3://savant-data/models/yolov8m/yolov8m.md5
+          parameters:
+            endpoint: https://eu-central-1.linodeobjects.com
+        format: custom
+        config_file: config_infer_primary_yoloV8.txt
+        custom_lib_path: /opt/savant/lib/libnvdsinfer_custom_impl_Yolo.so
+        output:
+          objects:
+            - class_id: 2
+              label: car
+            - class_id: 3
+              label: motobike
+            - class_id: 5
+              label: bus
+            - class_id: 7
+              label: truck
+
+    # tracker
+    - element: nvtracker
+      properties:
+        ll-lib-file: /opt/nvidia/deepstream/deepstream/lib/libnvds_nvmultiobjecttracker.so
+        ll-config-file: ${oc.env:PROJECT_PATH}/vision_modules_savant_test/vehicle_speed_detector/config_tracker_NvDCF_perf.yml
+        tracker-width: 960  # 640  # must be a multiple of 32
+        tracker-height: 544  # 384
+        display-tracking-id: 0
+
+    - element: pyfunc
+      module: vision_modules.vehicle_speed_detector.src.post_processor
+      class_name: LineCrossing
+      kwargs:
+        config_path: ${oc.env:PROJECT_PATH}/vision_modules_savant_test/vehicle_speed_detector/entry_exit_line_cords.yml
+        calib_path: ${oc.env:PROJECT_PATH}/vision_modules_savant_test/vehicle_speed_detector/calib.yml
+        stale_track_del_period: 5000
+        target_obj_labels: [ car, motobike, bus, truck]
+        idle_tracker_buffer: 900
+        idle_distance_threshold: 30
