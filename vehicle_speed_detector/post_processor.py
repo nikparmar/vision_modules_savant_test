@@ -77,9 +77,10 @@ class LineCrossing(NvDsPyFuncPlugin):
         self.calib_config = {}
         with open(self.calib_path, 'r', encoding='utf8') as f:
             self.calib_data = yaml.safe_load(f)
+        print(self.calib_data, "Calibration Data")
         for source_id, calibration_data in self.calib_data.items():
             self.calib_config[source_id] = calibration_data
-
+        print(self.calib_config, "calibration configuration")
         self.lc_trackers = {}
         self.track_last_frame_num = defaultdict(lambda: defaultdict(int))
         self.entry_count = defaultdict(int)
