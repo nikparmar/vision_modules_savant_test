@@ -19,6 +19,7 @@ class ConditionalDetectorSkip(NvDsPyFuncPlugin):
         super().__init__(**kwargs)
         with open(self.config_path, "r", encoding='utf8') as stream:
             self.line_config = yaml.safe_load(stream)
+            print(self.line_config)
 
     def process_frame(self, buffer: Gst.Buffer, frame_meta: NvDsFrameMeta):
         primary_meta_object = None
@@ -45,6 +46,7 @@ class LineCrossing(NvDsPyFuncPlugin):
         super().__init__(**kwargs)
         with open(self.config_path, "r", encoding='utf8') as stream:
             self.line_config = yaml.safe_load(stream)
+            print(self.line_config)
 
         self.areas = {}
         for source_id, line_cfg in self.line_config.items():
