@@ -32,26 +32,27 @@ pipeline:
 
     # detector
     - element: nvinfer@detector
-      name: yolov8m
+      name: Primary_Detector
       model:
         remote:
-          url: s3://savant-data/models/yolov8m/yolov8m.zip
-          checksum_url: s3://savant-data/models/yolov8m/yolov8m.md5
+          url: s3://savant-data/models/Primary_Detector/Primary_Detector.zip
+          checksum_url: s3://savant-data/models/Primary_Detector/Primary_Detector.md5
           parameters:
             endpoint: https://eu-central-1.linodeobjects.com
-        format: custom
-        config_file: config_infer_primary_yoloV8.txt
-        custom_lib_path: /opt/savant/lib/libnvdsinfer_custom_impl_Yolo.so
+        format: caffe
+        model_file: resnet10.caffemodel
+        batch_size: 1
+        precision: int8
+        int8_calib_file: cal_trt.bin
+        label_file: labels.txt
+        input:
+          scale_factor: 0.0039215697906911373
         output:
+          num_detected_classes: 4
+          layer_names: [conv2d_bbox, conv2d_cov/Sigmoid]
           objects:
-            - class_id: 2
-              label: car
-            - class_id: 3
-              label: motobike
-            - class_id: 5
-              label: bus
-            - class_id: 7
-              label: truck
+            - class_id: 0
+              label: Car
 
     # tracker
     - element: nvtracker
